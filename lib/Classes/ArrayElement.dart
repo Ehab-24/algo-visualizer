@@ -21,9 +21,9 @@ class ArrayElement {
   Color get color {
     switch (_state) {
       case EleState.basic:
-        return secondary;
+        return primary400;
       case EleState.happy:
-        return secondary300;
+        return secondary;
       case EleState.current:
         return Colors.green;
     }

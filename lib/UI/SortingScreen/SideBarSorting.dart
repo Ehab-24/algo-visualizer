@@ -1,6 +1,6 @@
+
 import 'package:algo_visualizer/Globals/decorations.dart';
 import 'package:algo_visualizer/Globals/functions.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,9 +28,9 @@ class SideBarSortingState extends State<SideBarSorting> {
       child: Column(
         children: const [
           _Actions(),
-          space120v,
+          space60v,
           _Properties(),
-          space120v,
+          space60v,
           _ActionButtons(),
         ],
       ),
@@ -64,10 +64,12 @@ class _Properties extends StatelessWidget {
       valueListenable: _size,
       builder: (context, length, child) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 30),
-        decoration: Decorations.sideBarProperties,
+        decoration: Decorations.sideBarContainers,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Text('Comparisons: 16822'),
+            divider,
             Text('Swaps count: $swapsCount'),
             divider,
             Text('Array accesses: $arrayAccesses'),
@@ -98,7 +100,7 @@ class _ActionsState extends State<_Actions> {
     return SizedBox(
       width: w,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           MDropdownMenuButton(
             value: sortType,
@@ -127,6 +129,10 @@ class _ActionsState extends State<_Actions> {
                 child: Text('Quick Sort'),
               ),
               DropdownMenuItem(
+                value: 'heap',
+                child: Text('Heap Sort'),
+              ),
+              DropdownMenuItem(
                 value: 'cocktail',
                 child: Text('Cocktail Sort'),
               ),
@@ -137,13 +143,18 @@ class _ActionsState extends State<_Actions> {
             ],
           ),
           space40v,
-          MSlider(
-            value: _size,
-            min: 10,
-            max: 1000,
-            onChanged: (val) {
-              _size.value = val.round();
-            },
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 30),
+            decoration: Decorations.sideBarContainers,
+            child: MSlider(
+              value: _size,
+              min: 10,
+              max: 1000,
+              label: 'Size',
+              onChanged: (val) {
+                _size.value = val.round();
+              },
+            ),
           )
         ],
       ),

@@ -6,7 +6,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/scheduler.dart' show timeDilation;
 
 import '../Classes/Pos.dart';
 import '../Classes/GridNode.dart';
@@ -59,7 +58,7 @@ class GridPr extends ChangeNotifier {
   GridNode getNode(int r, int c) => grid[r][c];
 
   Future<void> setStartingNode(int r, int c) async {
-    if (!grid[r][c].isTraversable) {
+    if (!grid[r][c].isTraversable || grid[r][c].isTarget) {
       return;
     }
     _startingNode!.setState(GridNodeState.basic);
@@ -74,7 +73,7 @@ class GridPr extends ChangeNotifier {
   }
 
   Future<void> setTarget(int r, int c) async {
-    if (!grid[r][c].isTraversable) {
+    if (!grid[r][c].isTraversable || grid[r][c].isStarting) {
       return;
     }
     _target!.setState(GridNodeState.basic);
@@ -156,7 +155,7 @@ class GridPr extends ChangeNotifier {
 
     while (path != null) {
       _markAsPath(path);
-      _incerementFCost(path.Fcost);
+      _incerementFCost(path);
 
       double cost = 0.0;
       if (path.parent != null && path.pos.inlineWith(path.parent!.pos)) {
@@ -266,8 +265,8 @@ class GridPr extends ChangeNotifier {
     grid[node.pos.y][node.pos.x].setState(GridNodeState.path);
   }
 
-  void _incerementFCost(double val) {
-    _totalFCost += val;
+  void _incerementFCost(GridNode node) {
+    _totalFCost += node.H + node.G - 10000.0;
   }
 
   void _incerementCost(double val) {

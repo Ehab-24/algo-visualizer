@@ -1,26 +1,25 @@
-
 import 'package:algo_visualizer/UI/PathfindingScreen/GridVisualizer.dart';
 import 'package:flutter/material.dart';
 
+import '../UI/ExplanationScreen/BodyExplanation.dart';
 import '../UI/HomeScreen/BodyHome.dart';
-import '../UI/Searching/SearchVisualizer.dart';
 import '../UI/SortingScreen/ArrayVisualizer.dart';
 
 enum Screen {
   home,
   grid,
   array,
-  search,
+  explanation,
 }
 
 class ScreenPr extends ChangeNotifier {
   ScreenPr();
 
   Screen _state = Screen.home;
-  Widget _screenWidget = const BodyHome();
+  Widget? _screenWidget = const BodyHome();
 
   Screen get state => _state;
-  Widget get widget => _screenWidget;
+  Widget get widget => _screenWidget!;
 
   void setScreen(String screen) {
     switch (screen) {
@@ -29,7 +28,7 @@ class ScreenPr extends ChangeNotifier {
           return;
         }
         _state = Screen.home;
-        _screenWidget = const BodyHome();
+        _screenWidget = null;
         break;
       case 'grid':
         if (_state == Screen.grid) {
@@ -45,12 +44,12 @@ class ScreenPr extends ChangeNotifier {
         _state = Screen.array;
         _screenWidget = const ArrayVisualizer();
         break;
-      case 'search':
-        if (_state == Screen.search) {
+      case 'explanation':
+        if (_state == Screen.explanation) {
           return;
         }
-        _state = Screen.search;
-        _screenWidget = const SearchVisualizer();
+        _state = Screen.explanation;
+        _screenWidget = const BodyExplanation();
         break;
       default:
         throw 'screen doesn\'t exist';

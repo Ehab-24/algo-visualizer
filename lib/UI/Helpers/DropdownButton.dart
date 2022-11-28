@@ -38,7 +38,7 @@ class MDropdownMenuButtonState extends State<MDropdownMenuButton> {
         borderRadius: BorderRadius.circular(8),
         value: widget.value,
         onChanged: widget.onChanged,
-        style: Styles.neon,
+        style: Styles.neon(),
       ),
     ).withScaleOnHover();
   }

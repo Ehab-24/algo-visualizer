@@ -89,7 +89,7 @@ class _GridVisualizerState extends State<GridVisualizer> {
                                 margin: const EdgeInsets.all(1),
                                 decoration: BoxDecoration(
                                   // shape: BoxShape.circle,
-                                  borderRadius: BorderRadius.circular(6),
+                                  borderRadius: BorderRadius.circular(3),
                                   color: node.color,
                                 ),
                               ),

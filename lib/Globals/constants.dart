@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 /*  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ COLORS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~*/
 
 const Color primary = Color.fromRGBO(59, 24, 95, 1);
+const Color primary400 = Color.fromARGB(255, 108, 36, 129);
+const Color primary700 = Color.fromARGB(255, 40, 21, 83);
 const Color background = Color.fromARGB(255, 14, 10, 22);
 // const Color background = Color.fromARGB(255, 24, 0, 44);
 

@@ -1,21 +1,19 @@
-
+// import 'package:algo_visualizer/Globals/constants.dart';
 // import 'package:flutter/material.dart';
 
-// import 'AppBarSorting.dart';
-// import 'ArrayVisualizer.dart';
-
-// class ArrayVisualizerScreen extends StatelessWidget {
-//   const ArrayVisualizerScreen({super.key});
+// class ScreenSorting extends StatelessWidget {
+//   const ScreenSorting({super.key});
 
 //   @override
 //   Widget build(BuildContext context) {
-//     return Column(
-//       children: const [
+//     return Scaffold(
+//       backgroundColor: background,
+//       body: Row(
+//         children: [
 
-//         AppBarSorting(),
-
-//         ArrayVisualizer()
-//       ],
+//           NavBar()
+//         ],
+//       ),
 //     );
 //   }
 // }

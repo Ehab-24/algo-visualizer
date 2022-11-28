@@ -1,16 +1,12 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'dart:math';
-
 import 'package:algo_visualizer/Globals/decorations.dart';
-import 'package:algo_visualizer/Globals/functions.dart';
 import 'package:algo_visualizer/extensionMethods.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../Classes/GridNode.dart';
 import '../../Globals/constants.dart';
+import '../../Globals/styles.dart';
 import '../../Providers/GridProvider.dart';
 import '../Helpers/Buttons.dart';
 import '../Helpers/DropdownButton.dart';
@@ -34,9 +30,9 @@ class SideBarPathfindingState extends State<SideBarPathfinding> {
       child: Column(
         children: const [
           _Actions(),
-          space80v,
+          space60v,
           _Properties(),
-          space80v,
+          space60v,
           _ActionButtons(),
         ],
       ),
@@ -70,31 +66,31 @@ class _Properties extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 30),
-      decoration: Decorations.sideBarProperties,
+      decoration: Decorations.sideBarContainers,
       child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const _RowsAndCols(),
-                divider,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Opened nodes: $openedNodes'),
-                    space10v,
-                    Text('Visited nodes: $visitedNodes'),
-                  ],
-                ),
-                divider,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Total F_cost: ${Fcost.toStringAsFixed(1)}'),
-                    space10v,
-                    Text('Total Cost: ${cost.toStringAsFixed(1)}'),
-                  ],
-                ),
-              ],
-            ),
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const _RowsAndCols(),
+          divider,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Opened nodes: $openedNodes'),
+              space10v,
+              Text('Visited nodes: $visitedNodes'),
+            ],
+          ),
+          divider,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Total F_cost: ${Fcost.toStringAsFixed(1)}'),
+              space10v,
+              Text('Total Cost: ${cost.toStringAsFixed(1)}'),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -132,68 +128,83 @@ class _Actions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final h = screenHeight(context);
     final algoType = context.watch<GridPr>().algoType;
-    return h < 640
-        ? const SizedBox.shrink()
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              h < 700
-                  ? space0
-                  : MDropdownMenuButton(
-                      value: algoType,
-                      onChanged: (value) => _onDropdownChanged(context, value),
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'a-star',
-                          child: Text('A* Search'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'dijkstra',
-                          child: Text('Dijkstra\'s'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'best-first',
-                          child: Text('Best First Search'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'depth-first',
-                          child: Text('Depth First Search'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'breadth-first',
-                          child: Text('Breadth First Search'),
-                        ),
-                      ],
-                    ),
-              space40v,
-              const _ChoiceChips(),
-              space40v,
-              MSlider(
-                value: _rows,
-                min: 5,
-                max: 26,
-                onChanged: (val) {
-                  _rows.value = val.toInt();
-                },
-              ),
-              MSlider(
-                value: _cols,
-                min: 4,
-                max: 40,
-                onChanged: (val) {
-                  _cols.value = val.toInt();
-                },
-              ),
-            ],
-          );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MDropdownMenuButton(
+          value: algoType,
+          onChanged: (value) => _onDropdownChanged(context, value),
+          items: const [
+            DropdownMenuItem(
+              value: 'a-star',
+              child: Text('A* Search'),
+            ),
+            DropdownMenuItem(
+              value: 'dijkstra',
+              child: Text('Dijkstra\'s'),
+            ),
+            DropdownMenuItem(
+              value: 'best-first',
+              child: Text('Best First Search'),
+            ),
+            DropdownMenuItem(
+              value: 'depth-first',
+              child: Text('Depth First Search'),
+            ),
+            DropdownMenuItem(
+              value: 'breadth-first',
+              child: Text('Breadth First Search'),
+            ),
+          ],
+        ),
+        space30v,
+        const _ChoiceChips(),
+        space30v,
+        const _Sliders(),
+      ],
+    );
   }
 
   void _onDropdownChanged(BuildContext context, value) {
     if (value is String) {
       Provider.of<GridPr>(context, listen: false).setAlgoType(value);
     }
+  }
+}
+
+class _Sliders extends StatelessWidget {
+  const _Sliders({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 30),
+      decoration: Decorations.sideBarContainers,
+      child: Column(
+        children: [
+          MSlider(
+            value: _rows,
+            min: 4,
+            max: 25,
+            label: 'Rows',
+            onChanged: (val) {
+              _rows.value = val.toInt();
+            },
+          ),
+          space20v,
+          MSlider(
+            value: _cols,
+            min: 4,
+            max: 40,
+            label: 'Columns',
+            onChanged: (val) {
+              _cols.value = val.toInt();
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -209,28 +220,40 @@ class _ChoiceChips extends StatelessWidget {
         ChoiceChip(
           backgroundColor: secondary.withOpacity(0.2),
           selectedColor: secondary.withOpacity(0.6),
-          label: const Text('Live'),
+          label: Text(
+            'Live',
+            style: Styles.neon(14),
+          ),
           selected: gridWatch.isLiveMode,
           onSelected: (_) => _setAnimateMode(context, AnimateMode.live),
         ).withScaleOnHover(1.1),
         ChoiceChip(
           backgroundColor: secondary.withOpacity(0.2),
           selectedColor: secondary.withOpacity(0.6),
-          label: const Text('Fast'),
+          label: Text(
+            'Fast',
+            style: Styles.neon(14),
+          ),
           selected: gridWatch.isFastMode,
           onSelected: (_) => _setAnimateMode(context, AnimateMode.fast),
         ).withScaleOnHover(1.1),
         ChoiceChip(
           backgroundColor: secondary.withOpacity(0.2),
           selectedColor: secondary.withOpacity(0.6),
-          label: const Text('Normal'),
+          label: Text(
+            'Normal',
+            style: Styles.neon(14),
+          ),
           selected: gridWatch.isNormalMode,
           onSelected: (_) => _setAnimateMode(context, AnimateMode.normal),
         ).withScaleOnHover(1.1),
         ChoiceChip(
           backgroundColor: secondary.withOpacity(0.2),
           selectedColor: secondary.withOpacity(0.6),
-          label: const Text('Slow'),
+          label: Text(
+            'Slow',
+            style: Styles.neon(14),
+          ),
           selected: gridWatch.isSlowMode,
           onSelected: (_) => _setAnimateMode(context, AnimateMode.slow),
         ).withScaleOnHover(1.1),
@@ -330,43 +353,3 @@ class _ActionButtonsState extends State<_ActionButtons> {
     gridReader.generateGrid(_rows.value, _cols.value);
   }
 }
-
-// class _Slider extends StatelessWidget {
-//   const _Slider({
-//     super.key,
-//     required this.value,
-//     required this.min,
-//     required this.max,
-//     required this.onChanged,
-//   });
-
-//   final double min, max;
-//   final ValueListenable<int> value;
-//   final void Function(double)? onChanged;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return ValueListenableBuilder(
-//         valueListenable: value,
-//         builder: (context, val, _) {
-//           return Column(
-//             children: [
-//               Row(
-//                 children: [
-//                   Text(min.toInt().toString()),
-//                   space120h,
-//                   Text(max.toInt().toString()),
-//                 ],
-//               ),
-//               Slider(
-//                 min: min,
-//                 max: max,
-//                 // divisions: 17,
-//                 value: val.toDouble(),
-//                 onChanged: onChanged,
-//               ),
-//             ],
-//           );
-//         });
-//   }
-// }

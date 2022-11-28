@@ -46,13 +46,13 @@ class GridNode {
       case GridNodeState.current:
         return Colors.amber;
       case GridNodeState.basic:
-        return secondary.withOpacity(0.4);
+        return primary.withOpacity(0.4);
       case GridNodeState.obstacle:
-        return secondary800;
+        return primary700;
       case GridNodeState.opened:
-        return secondary300;
-      case GridNodeState.closed:
         return secondary;
+      case GridNodeState.closed:
+        return primary400;
     }
   }
 

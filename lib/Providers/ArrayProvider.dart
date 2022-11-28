@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 import '../Classes/ArrayElement.dart';
 
@@ -17,7 +18,7 @@ class ArrayPr extends ChangeNotifier {
   void generateArray(int size) {
     _array = List.generate(size, (_) {
       int temp = Random().nextInt(3000000000);
-      if(temp > _max) {
+      if (temp > _max) {
         _max = temp;
       }
       return ArrayElement(temp);
@@ -51,6 +52,9 @@ class ArrayPr extends ChangeNotifier {
       case 'quick':
         await _quickSort(0, _array.length - 1);
         break;
+      case 'heap':
+        await _heapSort();
+        break;
       case 'cocktail':
         await _cocktailSort();
         break;
@@ -75,10 +79,10 @@ class ArrayPr extends ChangeNotifier {
     }
   }
 
-  Future<void> _displayCurrentEle(ArrayElement current) async {
+  Future<void> _displayCurrentEle(ArrayElement current, [int millisecods = 1]) async {
     current.markAsCurrent();
     notifyListeners();
-    await Future.delayed(const Duration(milliseconds: 1));
+    await Future.delayed(Duration(milliseconds: millisecods));
     current.markAsBasic();
   }
 
@@ -233,6 +237,19 @@ class ArrayPr extends ChangeNotifier {
     _arrayAccesses += 5;
 
     return (i + 1);
+  }
+
+  Future<void> _heapSort() async {
+    PriorityQueue<ArrayElement> pq = PriorityQueue(
+      (e0, e1) => e1.value.compareTo(e0.value),
+    );
+    pq.addAll(_array);
+
+    for(int i = length - 1; i >= 0; i--) {
+      await _displayCurrentEle(pq.first, 25);
+      _array[i] = pq.removeFirst();
+      _arrayAccesses += 2;
+    }
   }
 
   Future<void> _quickSort(int low, int high) async {

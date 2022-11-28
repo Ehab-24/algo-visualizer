@@ -30,11 +30,23 @@ class Decorations {
         ),
       ]);
   static const BoxDecoration sideBar = BoxDecoration(
-    color: primary,
-    boxShadow: [BoxShadow(blurRadius: 6, color: Colors.black)],
-  );
-  static BoxDecoration sideBarProperties = BoxDecoration(
-    color: background.withOpacity(0.2),
+      color: primary,
+      boxShadow: [BoxShadow(blurRadius: 6, color: Colors.black)],
+      image: DecorationImage(
+          image: AssetImage('assets/images/Random-bk.png'),
+          fit: BoxFit.fitHeight,
+          colorFilter: ColorFilter.mode(primary, BlendMode.modulate)));
+  static BoxDecoration sideBarContainers = BoxDecoration(
+    color: background.withOpacity(0.25),
     borderRadius: BorderRadius.circular(16),
   );
+  // static const BoxDecoration homeBody = BoxDecoration(
+  //   image: DecorationImage(
+  //     image: AssetImage('assets/images/bubbles-bk.jpg'),
+  //     colorFilter:
+  //         ColorFilter.mode(Color.fromARGB(255, 66, 48, 37), BlendMode.modulate),
+  //     fit: BoxFit.cover,
+  //   ),
+  //   color: background
+  // );
 }

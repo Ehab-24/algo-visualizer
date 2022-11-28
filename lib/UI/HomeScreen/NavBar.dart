@@ -14,38 +14,48 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final screen = Provider.of<ScreenPr>(context).state;
     final h = screenHeight(context);
-    
+
     double hoverContainerPosition;
     switch (screen) {
       case Screen.home:
-        hoverContainerPosition = h/2 - 128;
-        break;
+        throw 'No navBar found for Home Screen.';
       case Screen.grid:
-        hoverContainerPosition = h/2 - 55;
+        hoverContainerPosition = h / 2 - 52;
         break;
       case Screen.array:
-        hoverContainerPosition = h/2 + 17;
+        hoverContainerPosition = h / 2 + 21;
         break;
-      case Screen.search:
-        hoverContainerPosition = h/2 + 53;
+      case Screen.explanation:
+        hoverContainerPosition = h / 2 + 90;
         break;
     }
 
-    return Container(
-      width: navBarWidth,
-      clipBehavior: Clip.hardEdge,
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 30),
-      decoration: Decorations.sideBar,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          _HoveringContainer(
-            top: hoverContainerPosition,
-          ),
-          const Positioned.fill(
-            right: 4,
-            child: _IconButtons()),
-        ],
+    return AnimatedSize(
+      duration: d800,
+      reverseDuration: d800,
+      curve: Curves.easeOutQuad,
+      alignment: Alignment.centerLeft,
+      child: Container(
+        width: screen == Screen.home ? 0 : navBarWidth,
+        clipBehavior: Clip.hardEdge,
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+        decoration: BoxDecoration(
+          color: screen == Screen.explanation ? Colors.transparent : primary,
+          boxShadow: screen == Screen.explanation
+              ? null
+              : const [
+                  BoxShadow(blurRadius: 6, color: Colors.black),
+                ]
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            _HoveringContainer(
+              top: hoverContainerPosition,
+            ),
+            const Positioned.fill(right: 4, child: _IconButtons()),
+          ],
+        ),
       ),
     );
   }
@@ -84,16 +94,15 @@ class _IconButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ScreenPr>(
       builder: (context, screenPr, _) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           MIconButton(
             onPressed: () {
               screenPr.setScreen('home');
             },
-            isHighlighted: screenPr.state == Screen.home,
-            icon: Icons.home_outlined,
+            isHighlighted: false,
+            icon: Icons.arrow_back,
           ),
-          space30v,
+          const Spacer(),
           MIconButton(
             onPressed: () {
               screenPr.setScreen('grid');
@@ -112,11 +121,12 @@ class _IconButtons extends StatelessWidget {
           // space30v,
           // MIconButton(
           //   onPressed: () {
-          //     screenPr.setScreen('search');
+          //     screenPr.setScreen('explanation');
           //   },
-          //   isHighlighted: screenPr.state == Screen.search,
-          //   icon: Icons.search,
+          //   isHighlighted: screenPr.state == Screen.explanation,
+          //   icon: Icons.library_books_outlined,
           // ),
+          const Spacer(),
         ],
       ),
     );

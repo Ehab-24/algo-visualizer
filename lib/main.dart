@@ -8,20 +8,18 @@ import 'Providers/GridProvider.dart';
 import 'package:provider/provider.dart';
 
 import 'UI/HomeScreen/ScreenHome.dart';
+import 'UI/SubScreenManager.dart';
 
 void main() {
-
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider<ArrayPr>(create: (_) => ArrayPr()),
-        ChangeNotifierProvider<ScreenPr>(create: (_) => ScreenPr()),
-        ChangeNotifierProvider<GridPr>(create: (_) => GridPr(15, 15)),
-        ChangeNotifierProvider<SortedArrayPr>(create: (_) => SortedArrayPr(260)),
-      ],
-      child: const MyApp(),
-    )
-  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<ArrayPr>(create: (_) => ArrayPr()),
+      ChangeNotifierProvider<ScreenPr>(create: (_) => ScreenPr()),
+      ChangeNotifierProvider<GridPr>(create: (_) => GridPr(15, 15)),
+      ChangeNotifierProvider<SortedArrayPr>(create: (_) => SortedArrayPr(260)),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -29,22 +27,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screen = context.watch<ScreenPr>().state;
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        scrollbarTheme: const ScrollbarThemeData(
+          crossAxisMargin: 2,
+          thickness: MaterialStatePropertyAll(6),
+          thumbVisibility: MaterialStatePropertyAll(true),
+        ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: secondary600,
-            shadowColor: Colors.white54,
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12)
-          )
-        ), 
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: foreground,
-          brightness: Brightness.dark
-        )
+              backgroundColor: secondary600,
+              shadowColor: Colors.white54,
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12)),
+        ),
+        colorScheme: ColorScheme.fromSwatch()
+            .copyWith(secondary: foreground, brightness: Brightness.dark),
       ),
-      home: const ScreenHome(),
+      home:
+          screen == Screen.home ? const ScreenHome() : const SubScreenManager(),
     );
   }
 }
