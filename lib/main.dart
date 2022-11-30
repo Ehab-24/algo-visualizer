@@ -1,7 +1,6 @@
 import 'package:algo_visualizer/Globals/constants.dart';
 import 'package:algo_visualizer/Providers/ArrayProvider.dart';
 import 'package:algo_visualizer/Providers/ScreenProvider.dart';
-import 'package:algo_visualizer/Providers/SortedArrayProvider.dart';
 import 'package:flutter/material.dart';
 
 import 'Providers/GridProvider.dart';
@@ -13,10 +12,9 @@ import 'UI/SubScreenManager.dart';
 void main() {
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider<ArrayPr>(create: (_) => ArrayPr()),
+      ChangeNotifierProvider<ArrayPr>(create: (_) => ArrayPr(100)),
       ChangeNotifierProvider<ScreenPr>(create: (_) => ScreenPr()),
-      ChangeNotifierProvider<GridPr>(create: (_) => GridPr(15, 15)),
-      ChangeNotifierProvider<SortedArrayPr>(create: (_) => SortedArrayPr(260)),
+      ChangeNotifierProvider<GridPr>(create: (_) => GridPr(10, 10)),
     ],
     child: const MyApp(),
   ));
@@ -30,7 +28,7 @@ class MyApp extends StatelessWidget {
     final screen = context.watch<ScreenPr>().state;
 
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Algorithm Visualizer',
       theme: ThemeData(
         scrollbarTheme: const ScrollbarThemeData(
           crossAxisMargin: 2,

@@ -12,8 +12,8 @@ import '../Helpers/Buttons.dart';
 import '../Helpers/DropdownButton.dart';
 import '../Helpers/Slider.dart';
 
-ValueNotifier<int> _rows = ValueNotifier(15);
-ValueNotifier<int> _cols = ValueNotifier(15);
+ValueNotifier<int> _rows = ValueNotifier(10);
+ValueNotifier<int> _cols = ValueNotifier(10);
 
 class SideBarPathfinding extends StatefulWidget {
   const SideBarPathfinding({super.key});
@@ -156,6 +156,10 @@ class _Actions extends StatelessWidget {
               value: 'breadth-first',
               child: Text('Breadth First Search'),
             ),
+            // DropdownMenuItem(
+            //   value: 'jps',
+            //   child: Text('Jump Point Search'),
+            // ),
           ],
         ),
         space30v,
@@ -186,7 +190,7 @@ class _Sliders extends StatelessWidget {
           MSlider(
             value: _rows,
             min: 4,
-            max: 25,
+            max: 20,
             label: 'Rows',
             onChanged: (val) {
               _rows.value = val.toInt();
@@ -196,7 +200,7 @@ class _Sliders extends StatelessWidget {
           MSlider(
             value: _cols,
             min: 4,
-            max: 40,
+            max: 30,
             label: 'Columns',
             onChanged: (val) {
               _cols.value = val.toInt();

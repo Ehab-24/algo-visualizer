@@ -17,6 +17,7 @@ class _GridVisualizerState extends State<GridVisualizer> {
   bool _panStarted = false;
   bool _movingStartNode = false;
   bool _movingTarget = false;
+  bool _setTraversableVal = false;
 
   late final GridPr gridReader;
 
@@ -46,7 +47,7 @@ class _GridVisualizerState extends State<GridVisualizer> {
                     .map((node) => MouseRegion(
                           onEnter: (event) {
                             if (_panStarted) {
-                              node.setTraversable();
+                              node.setTraversableTo(_setTraversableVal);
                             } else if (_movingStartNode) {
                               gridReader.setStartingNode(
                                   node.pos.y, node.pos.x);
@@ -57,9 +58,11 @@ class _GridVisualizerState extends State<GridVisualizer> {
                           child: GestureDetector(
                             onTap: () {
                               gridReader.setTraversable(node);
+                              // node.setTraversable();
                             },
                             onPanStart: (details) {
-                              node.setTraversable();
+                              _setTraversableVal = !node.isTraversable;
+                              node.setTraversableTo(_setTraversableVal);
                               if (node.isStarting) {
                                 _movingStartNode = true;
                               } else if (node.isTarget) {
@@ -88,7 +91,6 @@ class _GridVisualizerState extends State<GridVisualizer> {
                                 alignment: Alignment.center,
                                 margin: const EdgeInsets.all(1),
                                 decoration: BoxDecoration(
-                                  // shape: BoxShape.circle,
                                   borderRadius: BorderRadius.circular(3),
                                   color: node.color,
                                 ),

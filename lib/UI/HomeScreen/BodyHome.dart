@@ -3,11 +3,16 @@ import 'dart:ui';
 
 import 'package:algo_visualizer/Globals/constants.dart';
 import 'package:algo_visualizer/Globals/functions.dart';
-import 'package:algo_visualizer/UI/Helpers/Buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../Providers/ScreenProvider.dart';
+import '../Helpers/Buttons.dart';
+import '../Helpers/CurvedPainter.dart';
+
+
+ValueNotifier<bool> isScreenHovering = ValueNotifier<bool>(false);
+
 
 class BodyHome extends StatefulWidget {
   const BodyHome({super.key});
@@ -27,63 +32,75 @@ class _BodyHomeState extends State<BodyHome> {
 
   @override
   Widget build(BuildContext context) {
+    
+    final h = screenHeight(context);
     final w = screenWidth(context);
-    return SizedBox(
-      width: w,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: 5,
-          sigmaY: 5,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Spacer(
-              flex: 1,
-            ),
-            const Text(
-              'Welcome!',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          space120v,
+          const Text(
+            'Welcome!',
+            style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: h * 0.1,),
+          SizedBox(
+            width: w * 0.6,
+            child: const Text(
+              'Learn famous sorting and pathfinding algorithms with interactive animations and well documented explanations.',
+              style: TextStyle(color: Colors.white, fontSize: 14, letterSpacing: 1.0),
               textAlign: TextAlign.center,
             ),
-            space20v,
-            SizedBox(
-              width: w * 0.6,
-              child: const Text(
-                'Learn famous sorting and pathfinding algorithms with interactive animations and well documented explanations.',
-                style: TextStyle(fontSize: 14, letterSpacing: 1.0),
-                textAlign: TextAlign.center,
+          ),
+          SizedBox(height: h * 0.1,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              NavigationCard(
+                icon: Icons.grid_view,
+                label: 'Pathfinding',
+                isScreenHovering: isScreenHovering,
+                onPressed: () => _setScreen('grid'),
               ),
-            ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                NavigationCard(
-                  icon: Icons.grid_view,
-                  label: 'Pathfinding',
-                  onPressed: () => screenReader.setScreen('grid'),
-                ),
-                space30h,
-                NavigationCard(
-                  icon: Icons.sort,
-                  label: 'Sorting',
-                  onPressed: () => screenReader.setScreen('array'),
-                ),
-                // space30h,
-                // NavigationCard(
-                //   icon: Icons.library_books_outlined,
-                //   label: 'Elaborations',
-                //   onPressed: () => screenReader.setScreen('explanation'),
-                // ),
-              ],
-            ),
-            const Spacer(
-              flex: 2,
-            ),
-          ],
-        ),
+              space40h,
+              NavigationCard(
+                icon: Icons.sort,
+                label: 'Sorting',
+                isScreenHovering: isScreenHovering,
+                onPressed: () => _setScreen('array'),
+              ),
+            ],
+          ),
+          SizedBox(height: h * 0.25),
+
+          CustomPaint(
+            size: Size(w, 300),
+            painter: CurvedPainter(primary),
+          ),
+          Container(
+            height: 300,
+            color: primary,
+          ),
+          
+          // // CustomPaint(
+          // //   size: Size(w, 300),
+          // //   painter: CurvedPainter(Colors.amber),
+          // // ),
+          // Container(
+          //   height: 600,
+          //   color: Colors.amber,
+          // )
+        ],
       ),
     );
   }
+
+  void _setScreen(String screen) {
+    isScreenHovering.value = false;
+    screenReader.setScreen(screen);
+  }
 }
+
+

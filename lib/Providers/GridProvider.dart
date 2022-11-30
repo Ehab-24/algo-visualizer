@@ -55,8 +55,6 @@ class GridPr extends ChangeNotifier {
 
   /*  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ PUBLIC METHODS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  */
 
-  GridNode getNode(int r, int c) => grid[r][c];
-
   Future<void> setStartingNode(int r, int c) async {
     if (!grid[r][c].isTraversable || grid[r][c].isTarget) {
       return;
@@ -144,6 +142,9 @@ class GridPr extends ChangeNotifier {
         node.H = 0;
       }
     }
+    grid[startingNode.pos.y][startingNode.pos.x].setState(GridNodeState.basic);
+    grid[target.pos.y][target.pos.x].setState(GridNodeState.basic);
+
     _setStartingNode(0, 0);
     _setTarget(rows - 1, cols - 1);
 
@@ -155,7 +156,7 @@ class GridPr extends ChangeNotifier {
 
     while (path != null) {
       _markAsPath(path);
-      _incerementFCost(path);
+      _incerementFCost(path.Fcost);
 
       double cost = 0.0;
       if (path.parent != null && path.pos.inlineWith(path.parent!.pos)) {
@@ -197,6 +198,9 @@ class GridPr extends ChangeNotifier {
   }
 
   Future<void> findTarget(String type) async {
+    if(_closed.isNotEmpty) {
+      clear();
+    }
     switch (type) {
       case 'depth-first':
         await _findTargetDepthFirst();
@@ -207,14 +211,22 @@ class GridPr extends ChangeNotifier {
       case 'dijkstra':
         await _findTargetDijkstra();
         break;
-      default:
-        await _findTarget(type);
+      // case 'jps':
+      //   await _findTargetJPS();
+      //   break;
+      case 'a-star':
+        await _findTarget(_bestInOpenedF);
+        break;
+      case 'best-first':
+        await _findTarget(_bestInOpenedH);
         break;
     }
     notifyListeners();
   }
 
   /*  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ PRIVATE METHODS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  */
+
+  GridNode _getNode(Pos pos) => grid[pos.y][pos.x];
 
   Future<void> _delay() async {
     if (_animateMode != AnimateMode.live) {
@@ -265,12 +277,16 @@ class GridPr extends ChangeNotifier {
     grid[node.pos.y][node.pos.x].setState(GridNodeState.path);
   }
 
-  void _incerementFCost(GridNode node) {
-    _totalFCost += node.H + node.G - 10000.0;
+  void _incerementFCost(double val) {
+    _totalFCost += val;
   }
 
   void _incerementCost(double val) {
     _totalCost += val;
+  }
+
+  bool _isValidIndex(Pos pos) {
+    return pos.y >= 0 && pos.y < rows && pos.x >= 0 && pos.x < cols;
   }
 
   void _addNeighbour(int r, int c) {
@@ -364,36 +380,152 @@ class GridPr extends ChangeNotifier {
     }
   }
 
-  Future<void> _findTarget(String type) async {
+  Future<void> _checkNeighbour(
+      GridNode current, Pos pos, PriorityQueue<GridNode> pq) async {
+    if (!_isValidIndex(pos)) {
+      return;
+    }
+    final node = _getNode(pos);
+    if (!_closed.contains(node) && node.isTraversable) {
+      bool isPresent1 = _opened.contains(node);
+      if (!isPresent1) {
+        node.setH(target.pos);
+      }
+
+      double newGCost = current.G + current.dist(node);
+      double newFCost = newGCost + node.H;
+
+      if (!isPresent1 || newFCost < node.Fcost) {
+        node.G = newGCost;
+        node.parent = current;
+
+        if (!isPresent1) {
+          _opened.add(node);
+          pq.add(node);
+          node.markAsOpened();
+
+          await _delay();
+        }
+      }
+    }
+  }
+
+  // Future<void> _checkNeighboursForDiagonalMove(
+  //     GridNode current, Pos dp, PriorityQueue<GridNode> pq) async {
+  //   //2. calculate 'd1' and 'd2'.
+  //   final Pos d1 = Pos(dp.y, 0);
+  //   final Pos d2 = Pos(0, dp.x);
+
+  //   //3. Check for forced neighbours.
+  //   if (!_getNode(current.pos + d1).isTraversable) {
+  //     final Pos f1 = Pos(-dp.y, dp.x);
+  //     await _checkNeighbour(current, f1, pq);
+  //   }
+  //   if (!_getNode(current.pos + d2).isTraversable) {
+  //     final Pos f2 = Pos(dp.y, -dp.x);
+  //     await _checkNeighbour(current, f2, pq);
+  //   }
+
+  //   //4. Open actual neighbours.
+  //   final Pos n1 = current.pos - dp;
+  //   await _checkNeighbour(current, n1, pq);
+  //   final Pos n2 = current.pos - d1;
+  //   await _checkNeighbour(current, n2, pq);
+  //   final Pos n3 = current.pos - d2;
+  //   await _checkNeighbour(current, n3, pq);
+  // }
+
+  // Future<void> _checkNeighboursForNonDiagonalMove(
+  //     GridNode current, Pos dp, PriorityQueue<GridNode> pq) async {
+  //   //2. calculate 'd1' and 'd2'.
+  //   final Pos d1 = dp.y == 0 ? Pos(-1, 0) : Pos(0, -1);
+  //   final d2 = -d1;
+
+  //   //3. Check for forced neighbours.
+  //   final obs1 = current.pos + d1; //Postion of possible obstacle1.
+  //   if (_isValidIndex(obs1) && !_getNode(obs1).isTraversable) {
+  //     final Pos f1 = current.pos + (d1 - dp);
+  //     await _checkNeighbour(current, f1, pq);
+  //   }
+  //   final obs2 = current.pos + d2; //Postion of possible obstacle2.
+  //   if (_isValidIndex(obs2) && !_getNode(obs2).isTraversable) {
+  //     final Pos f2 = current.pos + (d2 - dp);
+  //     await _checkNeighbour(current, f2, pq);
+  //   }
+
+  //   //4. Open actual neighbours.
+  //   final Pos n1 = current.pos - dp;
+  //   await _checkNeighbour(current, n1, pq);
+  // }
+
+  // Future<void> _findTargetJPS() async {
+  //   PriorityQueue<GridNode> pq =
+  //       PriorityQueue((n0, n1) => n0.Fcost.compareTo(n1.Fcost));
+  //   GridNode current;
+
+  //   startingNode.markAsCurrent();
+  //   startingNode.G = 0.0;
+  //   for (GridNode node in startingNode.neighbours) {
+  //     node.parent = startingNode;
+  //     node.setH(target.pos);
+
+  //     _opened.add(node);
+  //     pq.add(node);
+
+  //     await _delay();
+  //   }
+  //   _closed.add(startingNode);
+
+  //   while (_opened.isNotEmpty) {
+  //     current = pq.first;
+  //     current.markAsCurrent();
+
+  //     if (current == target) {
+  //       return;
+  //     }
+  //     _opened.remove(current);
+  //     pq.removeFirst();
+
+  //     _closed.add(current);
+
+  //     //1. calculate 'dp'
+  //     final Pos dp = Pos(
+  //       current.parent!.pos.y - current.pos.y,
+  //       current.parent!.pos.x - current.pos.x,
+  //     );
+
+  //     if (dp.x == 0 || dp.y == 0) {
+  //       await _checkNeighboursForNonDiagonalMove(current, dp, pq);
+  //     } else {
+  //       await _checkNeighboursForDiagonalMove(current, dp, pq);
+  //     }
+
+  //     if (!isLiveMode) {
+  //       notifyListeners();
+  //     }
+  //     current.markAsClosed();
+  //   }
+  //   // TODO:
+  //   // throw 'Path does not exist';
+  // }
+
+  Future<void> _findTarget(GridNode Function() bestInOpened) async {
     //This function finds the target node using either A* Search algorithm or
     //Best First Seacrh algorithm depending upon the 'bestInOpened' parameter.
-    int Function(GridNode, GridNode) comparator;
-    switch (type) {
-      case 'a-star':
-        comparator = (n0, n1) => n0.Fcost.compareTo(n1.Fcost);
-        break;
-      case 'best-first':
-        comparator = (n0, n1) => n0.H.compareTo(n1.H);
-        break;
-      default:
-        throw 'Algo Type: $type does not exist.';
-    }
 
-    PriorityQueue<GridNode> pq = PriorityQueue(comparator);
     GridNode current;
 
     _opened.add(startingNode);
-    pq.add(startingNode);
+    startingNode.G = 0.0;
 
     while (_opened.isNotEmpty) {
-      current = pq.first;
+      current = bestInOpened();
       current.markAsCurrent();
 
       if (current == target) {
         return;
       }
       _opened.remove(current);
-      pq.removeFirst();
 
       _closed.add(current);
 
@@ -401,7 +533,6 @@ class GridPr extends ChangeNotifier {
         if (_closed.contains(node) || node.state == GridNodeState.obstacle) {
           continue;
         }
-
         bool isPresent = _opened.contains(node);
         if (!isPresent) {
           node.setH(target.pos);
@@ -416,7 +547,6 @@ class GridPr extends ChangeNotifier {
 
           if (!isPresent) {
             _opened.add(node);
-            pq.add(node);
             node.markAsOpened();
 
             await _delay();
@@ -460,10 +590,10 @@ class GridPr extends ChangeNotifier {
 
         _opened.add(node);
         node.markAsOpened();
-        
+
         if (!pq.contains(node)) {
           pq.add(node);
-      _opened.remove(node);
+          _opened.remove(node);
         }
       }
       if (!isLiveMode) {

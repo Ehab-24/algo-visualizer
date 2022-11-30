@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../Globals/constants.dart';
 import '../../Globals/decorations.dart';
-import '../../Globals/functions.dart';
 import '../../Globals/styles.dart';
 
 const Curve _curve = Curves.easeOutCubic;
@@ -134,25 +133,31 @@ class _MIconButtonState extends State<MIconButton> {
   }
 }
 
+
 class NavigationCard extends StatefulWidget {
   const NavigationCard({
     super.key,
     required this.icon,
     required this.label,
     required this.onPressed,
+    required this.isScreenHovering,
   });
 
   final IconData icon;
   final String label;
   final VoidCallback onPressed;
+  final ValueNotifier<bool> isScreenHovering;
 
   @override
   State<NavigationCard> createState() => _NavigationCardState();
 }
 
 class _NavigationCardState extends State<NavigationCard> {
+  
+  final scaleFactor = 1.1;
+  
   bool isHovering = false;
-  final scaleFactor = 1.05;
+  bool isTapped = false;
 
   @override
   Widget build(BuildContext context) {
@@ -163,42 +168,45 @@ class _NavigationCardState extends State<NavigationCard> {
       child: AnimatedScale(
         duration: _duration,
         curve: _curve,
-        scale: isHovering ? scaleFactor : 1.0,
+        scale: isHovering ? scaleFactor : isTapped? 0.85: 1.0,
         child: GestureDetector(
+          onTapDown: (_) => _setTapped(true),
+          onTapCancel: () => _setTapped(false),
+          onTapUp: (_) => _setTapped(false),
           onTap: widget.onPressed,
           child: AnimatedContainer(
             duration: _duration,
             curve: _curve,
-            width: 160,
-            height: 160,
+            width: 140,
+            height: 140,
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
               gradient: RadialGradient(
-                colors: isHovering
+                colors: isHovering || isTapped
                     ? [
-                        background,
-                        secondary,
+                        background.withOpacity(0.6),
+                        Colors.purpleAccent,
                       ]
                     : [
-                        background.withOpacity(0.7),
-                        secondary.withOpacity(0.4),
+                        background.withOpacity(0.6),
+                        secondary100.withOpacity(0.4),
                       ],
                 radius: 1.5,
               ),
-              borderRadius: BorderRadius.circular(20),
             ),
             child: AnimatedScale(
               duration: _duration,
               curve: _curve,
-              scale: isHovering ? 1.2 : 1.0,
+              scale: isHovering ? 1.1 : 0.9,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     widget.icon,
                     size: 50,
-                    color: isHovering ? Colors.white : Colors.grey.shade600,
+                    color: isHovering || isTapped ? Colors.white : Colors.grey.shade600,
                     shadows: List<Shadow>.generate(
-                      isHovering ? 4 : 0,
+                      isHovering || isTapped ? 4 : 0,
                       (index) => Shadow(
                           blurRadius: index * 3,
                           color: secondary.withOpacity(0.75)),
@@ -206,7 +214,7 @@ class _NavigationCardState extends State<NavigationCard> {
                   ),
                   Text(
                     widget.label,
-                    style: isHovering
+                    style: isHovering || isTapped
                         ? Styles.neon()
                         : TextStyle(
                             fontSize: 16,
@@ -224,181 +232,188 @@ class _NavigationCardState extends State<NavigationCard> {
 
   void _setHovering(bool val) {
     setState(() {
-      isHovering = val;
+      widget.isScreenHovering.value = isHovering = val;
     });
   }
-}
-
-enum _FABState {
-  searchbar,
-  searchButton,
-  backButton,
-}
-
-class FAB extends StatefulWidget {
-  const FAB({
-    super.key,
-  });
-
-  @override
-  State<FAB> createState() => FABState();
-}
-
-class FABState extends State<FAB> {
-  final int page = 1;
-
-  _FABState state = _FABState.searchButton;
-  bool isHovering = false;
-  double scale = 1.0;
-
-  @override
-  Widget build(BuildContext context) {
-    final w = screenWidth(context);
-
-    return Positioned(
-      left: 30,
-      bottom: 30,
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        onEnter: (_) {
-          _setScale(1.2);
-          _setHovering(true);
-        },
-        onExit: (_) {
-          _setScale(1.0);
-          _setHovering(false);
-        },
-        child: AnimatedScale(
-          duration: _duration,
-          curve: _curve,
-          scale: scale,
-          child: GestureDetector(
-            onTapDown: (_) =>_setScale(0.85),
-            onTapUp: (_) => _setScale(1.2),
-            onTap: () => _onTap(),
-            child: AnimatedSwitcher(
-              duration: d2000,
-              switchInCurve: _curve,
-              switchOutCurve: _curve,
-              transitionBuilder: (child, animation) => ScaleTransition(
-                scale: animation,
-                alignment: Alignment.centerLeft,
-                child: child,
-              ),
-              child: Container(
-                // width: _width,
-                height: iconButtonSize,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  shape: _shape,
-                  borderRadius: _borderRadius,
-                  gradient: RadialGradient(radius: 1.5, colors: _colors),
-                ),
-                child: _child,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  double get _width {
-    switch (state) {
-      case _FABState.searchbar:
-        return 98 + iconButtonSize + 24;
-      default:
-        return iconButtonSize;
-    }
-  }
-
-  BorderRadius? get _borderRadius {
-    if (state == _FABState.searchbar) {
-      BorderRadius.circular(iconButtonSize / 2);
-    }
-    return null;
-  }
-
-  BoxShape get _shape {
-    switch (state) {
-      case _FABState.searchbar:
-        return BoxShape.rectangle;
-      default:
-        return BoxShape.circle;
-    }
-  }
-
-  List<Color> get _colors {
-    // if (state == _FABState.searchbar) {
-    //   return [secondary, secondary];
-    // }
-    if (isHovering) {
-      return [
-        secondary.withOpacity(0.75),
-        secondary,
-      ];
-    } else {
-      return [
-        secondary.withOpacity(0.3),
-        secondary.withOpacity(0.6),
-      ];
-    }
-  }
-
-  Widget get _child {
-    switch (state) {
-      case _FABState.searchButton:
-        return const Icon(
-          Icons.search,
-        );
-      case _FABState.backButton:
-        return const Icon(
-          Icons.keyboard_arrow_up,
-        );
-      case _FABState.searchbar:
-        return Row(
-          children: [
-            const Icon(
-              Icons.search,
-            ),
-            const SizedBox(
-              width: 120,
-              child: TextField(),
-            )
-          ],
-        );
-    }
-  }
-
-  void _setState(_FABState val) {
+  
+  void _setTapped(bool val) {
     setState(() {
-      state = val;
-    });
-  }
-
-  void _onTap() {
-    switch (state) {
-      case _FABState.searchbar:
-        _setState(_FABState.searchButton);
-        break;
-      case _FABState.searchButton:
-        _setState(_FABState.searchbar);
-        break;
-      case _FABState.backButton:
-        _setState(_FABState.searchButton);
-        break;
-    }
-  }
-
-  void _setScale(double val) {
-    setState(() {
-      scale = val;
-    });
-  }
-
-  void _setHovering(bool val) {
-    setState(() {
-      isHovering = val;
+      isHovering = false;
+      isTapped = val;
     });
   }
 }
+
+// enum _FABState {
+//   searchbar,
+//   searchButton,
+//   backButton,
+// }
+
+// class FAB extends StatefulWidget {
+//   const FAB({
+//     super.key,
+//   });
+
+//   @override
+//   State<FAB> createState() => FABState();
+// }
+
+// class FABState extends State<FAB> {
+//   final int page = 1;
+
+//   _FABState state = _FABState.searchButton;
+//   bool isHovering = false;
+//   double scale = 1.0;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final w = screenWidth(context);
+
+//     return Positioned(
+//       left: 30,
+//       bottom: 30,
+//       child: MouseRegion(
+//         cursor: SystemMouseCursors.click,
+//         onEnter: (_) {
+//           _setScale(1.2);
+//           _setHovering(true);
+//         },
+//         onExit: (_) {
+//           _setScale(1.0);
+//           _setHovering(false);
+//         },
+//         child: AnimatedScale(
+//           duration: _duration,
+//           curve: _curve,
+//           scale: scale,
+//           child: GestureDetector(
+//             onTapDown: (_) =>_setScale(0.85),
+//             onTapUp: (_) => _setScale(1.2),
+//             onTap: () => _onTap(),
+//             child: AnimatedSwitcher(
+//               duration: d2000,
+//               switchInCurve: _curve,
+//               switchOutCurve: _curve,
+//               transitionBuilder: (child, animation) => ScaleTransition(
+//                 scale: animation,
+//                 alignment: Alignment.centerLeft,
+//                 child: child,
+//               ),
+//               child: Container(
+//                 // width: _width,
+//                 height: iconButtonSize,
+//                 padding: const EdgeInsets.symmetric(horizontal: 12),
+//                 decoration: BoxDecoration(
+//                   shape: _shape,
+//                   borderRadius: _borderRadius,
+//                   gradient: RadialGradient(radius: 1.5, colors: _colors),
+//                 ),
+//                 child: _child,
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   double get _width {
+//     switch (state) {
+//       case _FABState.searchbar:
+//         return 98 + iconButtonSize + 24;
+//       default:
+//         return iconButtonSize;
+//     }
+//   }
+
+//   BorderRadius? get _borderRadius {
+//     if (state == _FABState.searchbar) {
+//       BorderRadius.circular(iconButtonSize / 2);
+//     }
+//     return null;
+//   }
+
+//   BoxShape get _shape {
+//     switch (state) {
+//       case _FABState.searchbar:
+//         return BoxShape.rectangle;
+//       default:
+//         return BoxShape.circle;
+//     }
+//   }
+
+//   List<Color> get _colors {
+//     // if (state == _FABState.searchbar) {
+//     //   return [secondary, secondary];
+//     // }
+//     if (isHovering) {
+//       return [
+//         secondary.withOpacity(0.75),
+//         secondary,
+//       ];
+//     } else {
+//       return [
+//         secondary.withOpacity(0.3),
+//         secondary.withOpacity(0.6),
+//       ];
+//     }
+//   }
+
+//   Widget get _child {
+//     switch (state) {
+//       case _FABState.searchButton:
+//         return const Icon(
+//           Icons.search,
+//         );
+//       case _FABState.backButton:
+//         return const Icon(
+//           Icons.keyboard_arrow_up,
+//         );
+//       case _FABState.searchbar:
+//         return Row(
+//           children: [
+//             const Icon(
+//               Icons.search,
+//             ),
+//             const SizedBox(
+//               width: 120,
+//               child: TextField(),
+//             )
+//           ],
+//         );
+//     }
+//   }
+
+//   void _setState(_FABState val) {
+//     setState(() {
+//       state = val;
+//     });
+//   }
+
+//   void _onTap() {
+//     switch (state) {
+//       case _FABState.searchbar:
+//         _setState(_FABState.searchButton);
+//         break;
+//       case _FABState.searchButton:
+//         _setState(_FABState.searchbar);
+//         break;
+//       case _FABState.backButton:
+//         _setState(_FABState.searchButton);
+//         break;
+//     }
+//   }
+
+//   void _setScale(double val) {
+//     setState(() {
+//       scale = val;
+//     });
+//   }
+
+//   void _setHovering(bool val) {
+//     setState(() {
+//       isHovering = val;
+//     });
+//   }
+// }

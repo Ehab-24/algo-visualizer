@@ -1,3 +1,4 @@
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,11 @@ import 'package:collection/collection.dart';
 import '../Classes/ArrayElement.dart';
 
 class ArrayPr extends ChangeNotifier {
+
+  ArrayPr(int size) {
+    generateArray(size);
+  }
+
   List<ArrayElement> _array = [];
   int _max = 0, _swapsCount = 0, _arrayAccesses = 0;
 

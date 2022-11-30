@@ -1,3 +1,4 @@
+
 import 'package:algo_visualizer/Globals/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,32 +31,26 @@ class NavBar extends StatelessWidget {
         break;
     }
 
-    return AnimatedSize(
-      duration: d800,
-      reverseDuration: d800,
-      curve: Curves.easeOutQuad,
-      alignment: Alignment.centerLeft,
-      child: Container(
-        width: screen == Screen.home ? 0 : navBarWidth,
-        clipBehavior: Clip.hardEdge,
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
-        decoration: BoxDecoration(
-          color: screen == Screen.explanation ? Colors.transparent : primary,
-          boxShadow: screen == Screen.explanation
-              ? null
-              : const [
-                  BoxShadow(blurRadius: 6, color: Colors.black),
-                ]
-        ),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            _HoveringContainer(
-              top: hoverContainerPosition,
-            ),
-            const Positioned.fill(right: 4, child: _IconButtons()),
-          ],
-        ),
+    return Container(
+      width: screen == Screen.home ? 0 : navBarWidth,
+      clipBehavior: Clip.hardEdge,
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+      decoration: BoxDecoration(
+        color: screen == Screen.explanation ? Colors.transparent : primary,
+        boxShadow: screen == Screen.explanation
+            ? null
+            : const [
+                BoxShadow(blurRadius: 6, color: Colors.black),
+              ]
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          _HoveringContainer(
+            top: hoverContainerPosition,
+          ),
+          const Positioned.fill(right: 4, child: _IconButtons()),
+        ],
       ),
     );
   }

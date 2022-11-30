@@ -1,11 +1,11 @@
 {
-    "name": "algo_visualizer",
-    "short_name": "algo_visualizer",
+    "name": "Algorithm Visualizer",
+    "short_name": "Algorithm Visualizer",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Here you can learn famous sorting and pathfinding algorithms with performant interactive animations. This web application is an indiviual personal project created by Ehab Sohail.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

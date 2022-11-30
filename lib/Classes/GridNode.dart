@@ -102,6 +102,13 @@ class GridNode {
     _state = isTraversable ? GridNodeState.obstacle : GridNodeState.basic;
   }
 
+  void setTraversableTo(bool val) {
+    if (isStarting || isTarget) {
+      return;
+    }
+    _state = val ? GridNodeState.basic : GridNodeState.obstacle;
+  }
+
   //Only for calcuating distances from immediate (horizontal, vertical or diagonal) neighbours.
   double dist(GridNode node) {
     if (pos.x == node.pos.x || pos.y == node.pos.y) {
