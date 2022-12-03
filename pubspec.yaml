@@ -132,19 +132,19 @@ flutter_native_splash:
   #color_dark_android: "#042a49"
   #color_ios: "#42a5f5"
   #color_dark_ios: "#042a49"
-  #color_web: "#42a5f5"
+  color_web: "#281553"
   #color_dark_web: "#042a49"
   #image_android: assets/splash-android.png
   #image_dark_android: assets/splash-invert-android.png
   #image_ios: assets/splash-ios.png
   #image_dark_ios: assets/splash-invert-ios.png
-  #image_web: assets/splash-web.png
+  image_web: assets/images/splash-web.png
   #image_dark_web: assets/splash-invert-web.png
   #background_image_android: "assets/background-android.png"
   #background_image_dark_android: "assets/dark-background-android.png"
   #background_image_ios: "assets/background-ios.png"
   #background_image_dark_ios: "assets/dark-background-ios.png"
-  #background_image_web: "assets/background-web.png"
+  # background_image_web: "assets/background-web.png"
   #background_image_dark_web: "assets/dark-background-web.png"
   #branding_android: assets/brand-android.png
   #branding_dark_android: assets/dart_dark-android.png
@@ -177,17 +177,23 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  fonts:
+    - family: Farsan
+      fonts:
+        -  asset: assets/fonts/Farsan-Regular.ttf
+    - family: VarelaRound
+      fonts:
+        -  asset: assets/fonts/VarelaRound-Regular.ttf
+    # - family: Schyler
+    #   fonts:
+    #     - asset: fonts/Schyler-Regular.ttf
+    #     - asset: fonts/Schyler-Italic.ttf
+    #       style: italic
+    # - family: Trajan Pro
+    #   fonts:
+    #     - asset: fonts/TrajanPro.ttf
+    #     - asset: fonts/TrajanPro_Bold.ttf
+    #       weight: 700
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

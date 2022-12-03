@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../Globals/constants.dart';
+import '../../Globals/styles.dart';
 import '../../Providers/ArrayProvider.dart';
 import '../Helpers/Buttons.dart';
 import '../Helpers/Slider.dart';
 import '../Helpers/DropdownButton.dart';
 
-ValueNotifier<int> _size = ValueNotifier(10);
+ValueNotifier<int> _size = ValueNotifier(100);
 String sortType = 'selection';
 
 class SideBarSorting extends StatefulWidget {
@@ -68,15 +69,35 @@ class _Properties extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Comparisons: 16822'),
+            // Text('Comparisons: 16822'),
+            // divider,
+            Row(
+              children: [
+                const Text('Swaps count: ', style: Styles.b4,),
+                Text('$swapsCount', style: Styles.b3,),
+              ],
+            ),
             divider,
-            Text('Swaps count: $swapsCount'),
+            Row(
+              children: [
+                const Text('Array accesses: ', style: Styles.b4,),
+                Text('$arrayAccesses', style: Styles.b3,),
+              ],
+            ),
             divider,
-            Text('Array accesses: $arrayAccesses'),
+            Row(
+              children: [
+                const Text('Length: ', style: Styles.b4,),
+                Text('$length', style: Styles.b3,),
+              ],
+            ),
             divider,
-            Text('Length: $length'),
-            divider,
-            Text('Range: 0 ... $max'),
+            Row(
+              children: [
+                const Text('Range: 0 ... ', style: Styles.b4,),
+                Text('$max', style: Styles.b3,),
+              ],
+            ),
           ],
         ),
       ),
@@ -136,10 +157,10 @@ class _ActionsState extends State<_Actions> {
                 value: 'cocktail',
                 child: Text('Cocktail Sort'),
               ),
-              DropdownMenuItem(
-                value: 'merge',
-                child: Text('Merge Sort'),
-              ),
+              // DropdownMenuItem(
+              //   value: 'merge',
+              //   child: Text('Merge Sort'),
+              // ),
             ],
           ),
           space40v,

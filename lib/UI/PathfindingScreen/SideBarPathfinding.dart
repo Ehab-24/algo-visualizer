@@ -49,12 +49,8 @@ class _Properties extends StatelessWidget {
   Widget build(BuildContext context) {
     final double cost =
         context.select<GridPr, double>((GridPr gridPr) => gridPr.totalCost);
-    final double Fcost =
-        context.select<GridPr, double>((GridPr gridPr) => gridPr.totalFCost);
     final int visitedNodes =
         context.select<GridPr, int>((GridPr gridPr) => gridPr.visitedNodes);
-    final int openedNodes =
-        context.select<GridPr, int>((GridPr gridPr) => gridPr.openedNodes);
 
     const Divider divider = Divider(
       color: Colors.white38,
@@ -68,25 +64,22 @@ class _Properties extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 30),
       decoration: Decorations.sideBarContainers,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const _RowsAndCols(),
           divider,
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Opened nodes: $openedNodes'),
-              space10v,
-              Text('Visited nodes: $visitedNodes'),
+              const Text('Visited nodes: ', style: Styles.b4,),
+              Text(visitedNodes.toString(), style: Styles.b3,),
             ],
           ),
           divider,
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Total F_cost: ${Fcost.toStringAsFixed(1)}'),
-              space10v,
-              Text('Total Cost: ${cost.toStringAsFixed(1)}'),
+              const Text('Total Cost: ', style: Styles.b4,),
+              Text(cost.toStringAsFixed(1), style: Styles.b3,),
             ],
           ),
         ],
@@ -111,9 +104,19 @@ class _RowsAndCols extends StatelessWidget {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Columns: $cols'),
+                    Row(
+                      children: [
+                        const Text('Columns: ', style: Styles.b4,),
+                        Text(cols.toString(), style: Styles.b3,),
+                      ],
+                    ),
                     space10v,
-                    Text('Rows: $rows'),
+                    Row(
+                      children: [
+                        const Text('Rows: ', style: Styles.b4,),
+                        Text(rows.toString(), style: Styles.b3,),
+                      ],
+                    ),
                   ],
                 );
               });

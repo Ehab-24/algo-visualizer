@@ -29,7 +29,7 @@ class MSlider extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: Styles.neon(12),
+                style: Styles.neon(),
               ),
               SliderTheme(
                 data: SliderTheme.of(context).copyWith(

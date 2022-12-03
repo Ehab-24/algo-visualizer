@@ -1,4 +1,4 @@
-import 'package:algo_visualizer/Classes/ArrayElement.dart';
+
 import 'package:algo_visualizer/Globals/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

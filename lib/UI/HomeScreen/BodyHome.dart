@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 
 import 'package:algo_visualizer/Globals/constants.dart';
@@ -10,9 +9,7 @@ import '../../Providers/ScreenProvider.dart';
 import '../Helpers/Buttons.dart';
 import '../Helpers/CurvedPainter.dart';
 
-
 ValueNotifier<bool> isScreenHovering = ValueNotifier<bool>(false);
-
 
 class BodyHome extends StatefulWidget {
   const BodyHome({super.key});
@@ -32,7 +29,6 @@ class _BodyHomeState extends State<BodyHome> {
 
   @override
   Widget build(BuildContext context) {
-    
     final h = screenHeight(context);
     final w = screenWidth(context);
     return SingleChildScrollView(
@@ -42,19 +38,33 @@ class _BodyHomeState extends State<BodyHome> {
           space120v,
           const Text(
             'Welcome!',
-            style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 32,
+              fontFamily: 'VarelaRound',
+            ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: h * 0.1,),
+          SizedBox(
+            height: h * 0.1,
+          ),
           SizedBox(
             width: w * 0.6,
             child: const Text(
               'Learn famous sorting and pathfinding algorithms with interactive animations and well documented explanations.',
-              style: TextStyle(color: Colors.white, fontSize: 14, letterSpacing: 1.0),
+              style: TextStyle(
+                fontFamily: 'Farsan',
+                color: Colors.white,
+                fontSize: 18,
+                wordSpacing: 1.5,
+                letterSpacing: 1.5,
+              ),
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: h * 0.1,),
+          SizedBox(
+            height: h * 0.1,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -73,17 +83,17 @@ class _BodyHomeState extends State<BodyHome> {
               ),
             ],
           ),
-          SizedBox(height: h * 0.25),
+          // SizedBox(height: h * 0.25),
 
-          CustomPaint(
-            size: Size(w, 300),
-            painter: CurvedPainter(primary),
-          ),
-          Container(
-            height: 300,
-            color: primary,
-          ),
-          
+          // CustomPaint(
+          //   size: Size(w, 300),
+          //   painter: CurvedPainter(primary),
+          // ),
+          // Container(
+          //   height: 300,
+          //   color: primary,
+          // ),
+
           // // CustomPaint(
           // //   size: Size(w, 300),
           // //   painter: CurvedPainter(Colors.amber),
@@ -102,5 +112,3 @@ class _BodyHomeState extends State<BodyHome> {
     screenReader.setScreen(screen);
   }
 }
-
-

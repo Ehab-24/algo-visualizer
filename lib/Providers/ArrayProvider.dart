@@ -75,12 +75,11 @@ class ArrayPr extends ChangeNotifier {
   }
 
   Future<void> _getHappy() async {
-    double duration;
     int length = _array.length;
     for (int i = 0; i < length; i++) {
       _array[i].markAsHappy();
 
-      await Future.delayed(Duration(microseconds: (length * 0.2).round()));
+      await Future.delayed(Duration(milliseconds: (1/length).round()));
       notifyListeners();
     }
   }
