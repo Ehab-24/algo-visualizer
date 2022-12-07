@@ -31,8 +31,8 @@ class GridPr extends ChangeNotifier {
   final List<GridNode> _opened = [];
   AnimateMode _animateMode = AnimateMode.fast;
   String _algoType = 'a-star';
-  Duration _duration = const Duration(milliseconds: 1);
   List<List<GridNode>> grid = [];
+  bool _showCosts = false, isRunning = false;
 
   String get algoType => _algoType;
 
@@ -42,11 +42,26 @@ class GridPr extends ChangeNotifier {
   int get rows => grid.length;
   int get cols => grid[0].length;
 
+
   AnimateMode get animateMode => _animateMode;
+
+  Duration get duration {
+    switch (_animateMode) {
+      case AnimateMode.fast:
+        return const Duration(milliseconds: 1);
+      case AnimateMode.normal:
+        return const Duration(milliseconds: 10);
+      case AnimateMode.slow:
+        return const Duration(milliseconds: 100);
+      case AnimateMode.live:
+        throw 'Live mode not supported';
+    }
+  }
 
   double get totalFCost => _totalFCost;
   double get totalCost => _totalCost;
 
+  bool get showCosts => _showCosts;
   bool get isLiveMode => _animateMode == AnimateMode.live;
   bool get isFastMode => _animateMode == AnimateMode.fast;
   bool get isNormalMode => _animateMode == AnimateMode.normal;
@@ -57,6 +72,13 @@ class GridPr extends ChangeNotifier {
   GridNode get target => _target!;
 
   /*  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ PUBLIC METHODS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  */
+
+  void setShowCosts(bool val) {
+    if(_showCosts != val) {
+      _showCosts = val;
+      notifyListeners();
+    }
+  }
 
   Future<void> setStartingNode(int r, int c) async {
     if (!grid[r][c].isTraversable || grid[r][c].isTarget) {
@@ -102,21 +124,7 @@ class GridPr extends ChangeNotifier {
     if (_animateMode == mode) {
       return;
     }
-
     _animateMode = mode;
-    switch (mode) {
-      case AnimateMode.fast:
-        _duration = const Duration(milliseconds: 1);
-        break;
-      case AnimateMode.normal:
-        _duration = const Duration(milliseconds: 10);
-        break;
-      case AnimateMode.slow:
-        _duration = const Duration(milliseconds: 25);
-        break;
-      default:
-        break;
-    }
     notifyListeners();
   }
 
@@ -171,7 +179,7 @@ class GridPr extends ChangeNotifier {
       _incerementCost(cost);
       if (!isLiveMode) {
         notifyListeners();
-        await Future.delayed(const Duration(milliseconds: 10));
+        await _delay();
       }
       path = path.parent;
     }
@@ -231,12 +239,12 @@ class GridPr extends ChangeNotifier {
 
   Future<void> _delay() async {
     if (_animateMode != AnimateMode.live) {
-      await Future.delayed(_duration);
+      await Future.delayed(duration);
     }
   }
 
   void _setStartingNode(int r, int c) {
-    if(!isCleared) {
+    if (!isCleared) {
       clear();
     }
     _startingNode = grid[r][c];
@@ -244,7 +252,7 @@ class GridPr extends ChangeNotifier {
   }
 
   void _setTarget(int r, int c) {
-    if(!isCleared) {
+    if (!isCleared) {
       clear();
     }
     _target = grid[r][c];

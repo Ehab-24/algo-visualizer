@@ -34,6 +34,7 @@ class GridNode {
   bool get isStarting => _state == GridNodeState.starting;
   bool get isTarget => _state == GridNodeState.target;
   bool get isBasic => _state == GridNodeState.basic;
+  bool get isPath => _state == GridNodeState.path;
 
   Color get color {
     switch (_state) {

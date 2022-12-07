@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-
 
 /*  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ COLORS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~*/
 
@@ -47,21 +45,59 @@ const d2000 = Duration(seconds: 2);
 
 const space0 = SizedBox.shrink();
 
-const space10h = SizedBox(width: 10,);
-const space20h = SizedBox(width: 20,);
-const space30h = SizedBox(width: 30,);
-const space40h = SizedBox(width: 40,);
-const space60h = SizedBox(width: 60,);
-const space80h = SizedBox(width: 80,);
-const space120h = SizedBox(width: 120,);
+const space10h = SizedBox(
+  width: 10,
+);
+const space20h = SizedBox(
+  width: 20,
+);
+const space30h = SizedBox(
+  width: 30,
+);
+const space40h = SizedBox(
+  width: 40,
+);
+const space60h = SizedBox(
+  width: 60,
+);
+const space80h = SizedBox(
+  width: 80,
+);
+const space120h = SizedBox(
+  width: 120,
+);
 
-const space10v = SizedBox(height: 10,);
-const space20v = SizedBox(height: 20,);
-const space30v = SizedBox(height: 30,);
-const space40v = SizedBox(height: 40,);
-const space60v = SizedBox(height: 60,);
-const space80v = SizedBox(height: 80,);
-const space120v = SizedBox(height: 120,);
+const space10v = SizedBox(
+  height: 10,
+);
+const space20v = SizedBox(
+  height: 20,
+);
+const space30v = SizedBox(
+  height: 30,
+);
+const space40v = SizedBox(
+  height: 40,
+);
+const space60v = SizedBox(
+  height: 60,
+);
+const space80v = SizedBox(
+  height: 80,
+);
+const space120v = SizedBox(
+  height: 120,
+);
+
+/*  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ DIVIDERS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~*/
+
+const Divider divider = Divider(
+  color: Colors.white,
+  thickness: 2,
+  indent: 20,
+  endIndent: 20,
+  height: 40,
+);
 
 /*  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ NUMBERS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~*/
 

@@ -70,16 +70,28 @@ class _Properties extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Visited nodes: ', style: Styles.b4,),
-              Text(visitedNodes.toString(), style: Styles.b3,),
+              const Text(
+                'Visited nodes: ',
+                style: Styles.b4,
+              ),
+              Text(
+                visitedNodes.toString(),
+                style: Styles.b3,
+              ),
             ],
           ),
           divider,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Total Cost: ', style: Styles.b4,),
-              Text(cost.toStringAsFixed(1), style: Styles.b3,),
+              const Text(
+                'Total Cost: ',
+                style: Styles.b4,
+              ),
+              Text(
+                cost.toStringAsFixed(1),
+                style: Styles.b3,
+              ),
             ],
           ),
         ],
@@ -106,15 +118,27 @@ class _RowsAndCols extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const Text('Columns: ', style: Styles.b4,),
-                        Text(cols.toString(), style: Styles.b3,),
+                        const Text(
+                          'Columns: ',
+                          style: Styles.b4,
+                        ),
+                        Text(
+                          cols.toString(),
+                          style: Styles.b3,
+                        ),
                       ],
                     ),
                     space10v,
                     Row(
                       children: [
-                        const Text('Rows: ', style: Styles.b4,),
-                        Text(rows.toString(), style: Styles.b3,),
+                        const Text(
+                          'Rows: ',
+                          style: Styles.b4,
+                        ),
+                        Text(
+                          rows.toString(),
+                          style: Styles.b3,
+                        ),
                       ],
                     ),
                   ],
@@ -307,8 +331,8 @@ class _ActionButtonsState extends State<_ActionButtons> {
               ),
               space20v,
               MElevatedButton(
-                onPressed: _resetGrid,
-                text: 'Reset',
+                onPressed: _showCosts,
+                text: 'Show Costs',
               ),
             ],
           ),
@@ -336,6 +360,11 @@ class _ActionButtonsState extends State<_ActionButtons> {
   }
 
   Future<void> _onPathfindingBegin() async {
+    if (gridReader.isRunning) {
+      return;
+    }
+    gridReader.isRunning = true;
+
     final algoType = gridReader.algoType;
 
     bool isLiveMode = gridReader.isLiveMode;
@@ -346,17 +375,24 @@ class _ActionButtonsState extends State<_ActionButtons> {
       await Future.delayed(d400);
     }
     await gridReader.animatePath();
+    gridReader.isRunning = false;
   }
 
-  void _resetGrid() {
-    gridReader.reset();
+  void _showCosts() {
+    gridReader.setShowCosts(!gridReader.showCosts);
   }
 
   void _clearGrid() {
+    if(gridReader.isRunning) {
+      return;
+    }
     gridReader.clear();
   }
 
   void _generateGrid() {
+    if(gridReader.isRunning) {
+      return;
+    }
     gridReader.generateGrid(_rows.value, _cols.value);
   }
 }
